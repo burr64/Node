@@ -3,55 +3,42 @@
 //
 
 #include "Node.h"
+#include "Network.h"
 #include <iostream>
-#include <memory>
 #include <utility>
-#include <vector>
+#include <algorithm>
 
 Node::Node(std::string name) : name(std::move(name)) {}
 
 void Node::createEvent(const int value) {
-    for(auto& [node, stats]: subscriptions) {
+    for (auto& [receiver, stats] : subscriptions) {
         stats.first += value;
         stats.second++;
     }
 }
 
-void Node::subscribe(Node* other) {
-    if(other && other != this) {
-        subscriptions[other] = {0,0};
-    }
-}
-
-void Node::unsubscribe(Node* other) {
-    subscriptions.erase(other);
-}
-
-void Node::createAndSubscribe(Node* newNode) {
-    if(newNode && newNode != this) {
-        subscribe(newNode);
-    }
-}
-
-void Node::update() {
-    for(auto& [receiver, stats]: subscriptions) {
-        std::cout << name
-            << " -> " << receiver->name
-            << ": S = " << stats.first
-            << ", N = " << stats.second
-        << std::endl;
-    }
-
-    std::vector<Node*> nodesToRemove;
-
-    for(auto& [node, stats]: subscriptions) {
-        if(node->subscriptions.empty()) {
-            nodesToRemove.push_back(node);
+void Node::subscribe(Node* other, Network* network) {
+    if (other != this) {
+        for (const auto& [neighbor, _] : network->neighbors) {
+            if (std::find(network->neighbors[neighbor].begin(), network->neighbors[neighbor].end(), other) != network->neighbors[neighbor].end()) {
+                subscriptions[other] = {0, 0};
+                network->neighbors[this].push_back(other);
+                break;
+            }
         }
     }
+}
 
-    for (Node* node: nodesToRemove) {
-        subscriptions.erase(node);
-        delete node;
+void Node::unsubscribe(Node* other, Network* network) {
+    if (subscriptions.find(other) != subscriptions.end()) {
+        subscriptions.erase(other);
+        auto& neighborList = network->neighbors[this];
+        const auto it = std::remove(neighborList.begin(), neighborList.end(), other);
+        neighborList.erase(it, neighborList.end());
     }
+}
+
+void Node::createNode(Node* newNode, Network* network) {
+    network->addNode(newNode);
+    subscribe(newNode,network);
 }

@@ -4,10 +4,10 @@
 
 #ifndef NODE_H
 #define NODE_H
-#include <memory>
 #include <string>
 #include <unordered_map>
 
+class Network;
 
 class Node {
 public:
@@ -17,10 +17,9 @@ public:
     explicit Node(std::string  name);
 
     void createEvent(int value);
-    void subscribe(Node* other);
-    void unsubscribe(Node* other);
-    void createAndSubscribe(Node* newNode);
-    void update();
+    void subscribe(Node *other, Network *network);
+    void unsubscribe(Node* other, Network* network);
+    void createNode(Node* newNode, Network* network);
 };
 
 #endif //NODE_H

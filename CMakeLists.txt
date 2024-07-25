@@ -6,4 +6,6 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(Node main.cpp
         Node.cpp
         Node.h
+        Network.cpp
+        Network.h
 )

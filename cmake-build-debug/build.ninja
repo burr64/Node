@@ -61,6 +61,12 @@ build CMakeFiles/Node.dir/Node.cpp.obj: CXX_COMPILER__Node_unscanned_Debug C$:/U
   OBJECT_DIR = CMakeFiles\Node.dir
   OBJECT_FILE_DIR = CMakeFiles\Node.dir
 
+build CMakeFiles/Node.dir/Network.cpp.obj: CXX_COMPILER__Node_unscanned_Debug C$:/Users/burr/CLionProjects/Node/Network.cpp || cmake_object_order_depends_target_Node
+  DEP_FILE = CMakeFiles\Node.dir\Network.cpp.obj.d
+  FLAGS = -g -std=gnu++14 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\Node.dir
+  OBJECT_FILE_DIR = CMakeFiles\Node.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Node
@@ -69,7 +75,7 @@ build CMakeFiles/Node.dir/Node.cpp.obj: CXX_COMPILER__Node_unscanned_Debug C$:/U
 #############################################
 # Link the executable Node.exe
 
-build Node.exe: CXX_EXECUTABLE_LINKER__Node_Debug CMakeFiles/Node.dir/main.cpp.obj CMakeFiles/Node.dir/Node.cpp.obj
+build Node.exe: CXX_EXECUTABLE_LINKER__Node_Debug CMakeFiles/Node.dir/main.cpp.obj CMakeFiles/Node.dir/Node.cpp.obj CMakeFiles/Node.dir/Network.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Node.dir
