@@ -16,21 +16,20 @@ void Node::createEvent(const int value) {
     }
 }
 
-void Node::subscribe(Node *other) {
+void Node::subscribe(Node* other) {
     if(other && other != this) {
         subscriptions[other] = {0,0};
     }
 }
 
-void Node::unsubscribe(Node *other) {
+void Node::unsubscribe(Node* other) {
     subscriptions.erase(other);
 }
 
-void Node::createAndSubscribe() {
-    static int nodeCounter = 1;
-    std::string newName = "Node" + std::to_string(nodeCounter++);
-    const auto newNode = std::make_shared<Node>(newName);
-    subscribe(newNode.get());
+void Node::createAndSubscribe(Node* newNode) {
+    if(newNode) {
+        subscribe(newNode);
+    }
 }
 
 void Node::update() {

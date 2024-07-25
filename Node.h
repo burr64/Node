@@ -4,6 +4,7 @@
 
 #ifndef NODE_H
 #define NODE_H
+#include <memory>
 #include <string>
 #include <unordered_map>
 
@@ -18,7 +19,7 @@ public:
     void createEvent(int value);
     void subscribe(Node* other);
     void unsubscribe(Node* other);
-    void createAndSubscribe();
+    void createAndSubscribe(Node* newNode);
     void update();
 };
 
