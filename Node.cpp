@@ -8,7 +8,8 @@
 #include <utility>
 #include <algorithm>
 
-Node::Node(std::string name) : name(std::move(name)) {}
+Node::Node(std::string  name, Network* network)
+    : name(std::move(name)), network(network) {}
 
 void Node::createEvent(const int value) {
     for (auto& [receiver, stats] : subscriptions) {
@@ -17,7 +18,7 @@ void Node::createEvent(const int value) {
     }
 }
 
-void Node::subscribe(Node* other, Network* network) {
+void Node::subscribe(Node* other) {
     if (other != this) {
         for (const auto& [neighbor, _] : network->neighbors) {
             if (std::find(network->neighbors[neighbor].begin(), network->neighbors[neighbor].end(), other) != network->neighbors[neighbor].end()) {
@@ -29,7 +30,7 @@ void Node::subscribe(Node* other, Network* network) {
     }
 }
 
-void Node::unsubscribe(Node* other, Network* network) {
+void Node::unsubscribe(Node* other) {
     if (subscriptions.find(other) != subscriptions.end()) {
         subscriptions.erase(other);
         auto& neighborList = network->neighbors[this];
@@ -38,7 +39,8 @@ void Node::unsubscribe(Node* other, Network* network) {
     }
 }
 
-void Node::createNode(Node* newNode, Network* network) {
+void Node::createNode(const std::string &newName) {
+    auto newNode = new Node(newName, network);
     network->addNode(newNode);
-    subscribe(newNode,network);
+    subscribe(newNode);
 }

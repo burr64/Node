@@ -3,6 +3,7 @@
 //
 
 #include "Network.h"
+#include "Node.h"
 #include <iostream>
 #include <algorithm>
 
@@ -17,7 +18,7 @@ void Network::removeNode(Node* node) {
     }
 
     for (Node* neighbor : nodeInNetwork->second) {
-        neighbor->unsubscribe(node, this);
+        neighbor->unsubscribe(node);
     }
 
     neighbors.erase(nodeInNetwork);

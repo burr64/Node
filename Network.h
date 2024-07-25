@@ -9,6 +9,8 @@
 #include <unordered_map>
 #include <vector>
 
+class Node;
+
 class Network {
 public:
     std::unordered_map<Node*, std::vector<Node*>> neighbors;
