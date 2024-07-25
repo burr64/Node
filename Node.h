@@ -11,9 +11,9 @@
 class Node {
 public:
     std::string name;
-    std::unordered_map<Node*, std::pair<int,int>> subscription;
+    std::unordered_map<Node*, std::pair<int,int>> subscriptions;
 
-    explicit Node(const std::string& name);
+    explicit Node(std::string  name);
 
     void createEvent(int value);
     void subscribe(Node* other);
