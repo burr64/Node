@@ -6,31 +6,31 @@
 #include <iostream>
 #include <memory>
 #include <utility>
+#include <vector>
 
 Node::Node(std::string name) : name(std::move(name)) {}
 
 void Node::createEvent(const int value) {
-    for(auto& [receiver, stats]: subscriptions) {
+    for(auto& [node, stats]: subscriptions) {
         stats.first += value;
         stats.second++;
     }
 }
 
-void Node::subscribe(Node *other) {
+void Node::subscribe(Node* other) {
     if(other && other != this) {
         subscriptions[other] = {0,0};
     }
 }
 
-void Node::unsubscribe(Node *other) {
+void Node::unsubscribe(Node* other) {
     subscriptions.erase(other);
 }
 
-void Node::createAndSubscribe() {
-    static int nodeCounter = 1;
-    std::string newName = "Node" + std::to_string(nodeCounter++);
-    const auto newNode = std::make_shared<Node>(newName);
-    subscribe(newNode.get());
+void Node::createAndSubscribe(Node* newNode) {
+    if(newNode && newNode != this) {
+        subscribe(newNode);
+    }
 }
 
 void Node::update() {
@@ -40,5 +40,18 @@ void Node::update() {
             << ": S = " << stats.first
             << ", N = " << stats.second
         << std::endl;
+    }
+
+    std::vector<Node*> nodesToRemove;
+
+    for(auto& [node, stats]: subscriptions) {
+        if(node->subscriptions.empty()) {
+            nodesToRemove.push_back(node);
+        }
+    }
+
+    for (Node* node: nodesToRemove) {
+        subscriptions.erase(node);
+        delete node;
     }
 }

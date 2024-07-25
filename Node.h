@@ -18,7 +18,7 @@ public:
     void createEvent(int value);
     void subscribe(Node* other);
     void unsubscribe(Node* other);
-    void createAndSubscribe();
+    void createAndSubscribe(Node* newNode);
     void update();
 };
 
