@@ -21,6 +21,8 @@ public:
     void unsubscribe(Node* other);
     void createNode(const std::string& newName);
 
+    Node* clone(Network* newNetwork) const;
+
 private:
     Network* network;
 };

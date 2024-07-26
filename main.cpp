@@ -96,23 +96,26 @@ int main() {
 
         Network backup = network;
 
-        for (auto& [node, _] : backup.neighbors) {
-            if (rand() % 100 < eventProbability) {
-                node->createEvent(rand() % 100 + 1);
-            }
+        for (auto& [backupNode, _] : backup.neighbors) {
+            for (auto& [node, _] : network.neighbors) {
+                if (node == backupNode) {
+                    if (rand() % 100 < eventProbability) {
+                        node->createEvent(rand() % 100 + 1);
+                    }
 
-            if (rand() % 100 < createNodeProbability) {
-                node->createNode("Node" + std::to_string(network.neighbors.size() + 1));
-            }
+                    if (rand() % 100 < createNodeProbability) {
+                        node->createNode("Node" + std::to_string(network.neighbors.size() + 1));
+                    }
 
-            if (rand() % 100 < unsubscribeProbability) {
-                if (!node->subscriptions.empty()) {
-                    const auto randomNode = network.neighbors[node][std::rand() % network.neighbors[node].size()];
-                    node->unsubscribe(randomNode);
+                    if (rand() % 100 < unsubscribeProbability) {
+                        if (!node->subscriptions.empty()) {
+                            const auto randomNode = network.neighbors[node][std::rand() % network.neighbors[node].size()];
+                            node->unsubscribe(randomNode);
+                        }
+                    }
                 }
             }
         }
-        network = backup;
     }
     std::cout << "end";
     return 0;

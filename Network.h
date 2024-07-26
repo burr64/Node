@@ -19,6 +19,8 @@ public:
     void addNode(Node* node);
     void removeNode(Node* node);
     void update();
+
+    Network clone() const;
 };
 
 #endif // NETWORK_H
