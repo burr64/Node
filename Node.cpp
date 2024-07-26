@@ -40,7 +40,8 @@ void Node::unsubscribe(Node* other) {
 }
 
 void Node::createNode(const std::string &newName) {
-    auto newNode = new Node(newName, network);
+    const auto newNode = new Node(newName, network);
     network->addNode(newNode);
-    subscribe(newNode);
+    subscriptions[newNode] = {0, 0};
+    network->neighbors[this].push_back(newNode);
 }

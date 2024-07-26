@@ -27,18 +27,32 @@ void Network::removeNode(Node* node) {
 
 void Network::update() {
     for (const auto& [node, neighborList] : neighbors) {
-        for (const auto& neighbor : neighborList) {
-            std::cout << node->name
-                      << " -> " << neighbor->name
-                      << ": S = " << node->subscriptions[neighbor].first
-                      << ", N = " << node->subscriptions[neighbor].second
-                      << std::endl;
+        if (neighborList.empty()) {
+            removeNode(node);
         }
     }
 
     for (const auto& [node, neighborList] : neighbors) {
-        if (neighborList.empty()) {
-            removeNode(node);
+        for (const auto& neighbor : neighborList) {
+            std::cout << node->name
+                      << " -> " << neighbor->name
+                      << ": S = " << node->subscriptions[node].first
+                      << ", N = " << node->subscriptions[node].second
+                      << std::endl;
         }
+    }
+    std::cout << "\n";
+}
+
+void Network::printNetwork() const {
+    for (const auto& [node, neighborList] : neighbors) {
+        std::cout << node->name << ": [";
+        for (size_t i = 0; i < neighborList.size(); ++i) {
+            std::cout << neighborList[i]->name;
+            if (i < neighborList.size() - 1) {
+                std::cout << ", ";
+            }
+        }
+        std::cout << "]" << std::endl;
     }
 }

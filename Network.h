@@ -13,6 +13,7 @@ class Node;
 
 class Network {
 public:
+    void printNetwork() const;
     std::unordered_map<Node*, std::vector<Node*>> neighbors;
 
     void addNode(Node* node);
