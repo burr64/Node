@@ -11,6 +11,19 @@
 #include <algorithm>
 #include <cstdlib>
 
+void printSubscriptions(Node* node) {
+    std::cout << "Subscriptions of " << node->name << ": [";
+    bool first = true;
+    for (const auto& [subscribedNode, stats] : node->subscriptions) {
+        if (!first) {
+            std::cout << ", ";
+        }
+        std::cout << subscribedNode->name;
+        first = false;
+    }
+    std::cout << "]" << std::endl;
+}
+
 void randomInitializeNetwork(Network& network, const int numNodes) {
     if (numNodes < 1) {
         std::cerr << "The number of nodes must be at least 1!" << std::endl;
@@ -39,27 +52,22 @@ void randomSubscription(Network& network) {
         allNodes.push_back(node);
     }
 
-    bool needsUpdate;
-    do {
-        needsUpdate = false;
-        for (Node* node : allNodes) {
-            if (network.neighbors[node].empty()) {
-                std::vector<Node*> potentialNeighbors;
-                for (Node* potentialNode : allNodes) {
-                    if (potentialNode != node) {
-                        potentialNeighbors.push_back(potentialNode);
-                    }
-                }
-
-                if (!potentialNeighbors.empty()) {
-                    Node* randomNode = potentialNeighbors[std::rand() % potentialNeighbors.size()];
-                    node->subscriptions[randomNode] = {0, 0};
-                    network.neighbors[node].push_back(randomNode);
-                    needsUpdate = true;
+    for (Node* node : allNodes) {
+        if (node->subscriptions.empty()) {
+            std::vector<Node*> potentialNeighbors;
+            for (Node* potentialNode : allNodes) {
+                if (potentialNode != node) {
+                    potentialNeighbors.push_back(potentialNode);
                 }
             }
+
+            if (!potentialNeighbors.empty()) {
+                Node* randomNode = potentialNeighbors[std::rand() % potentialNeighbors.size()];
+                node->subscriptions[randomNode]={0,0};
+                network.neighbors[node].push_back(randomNode);
+            }
         }
-    } while (needsUpdate);
+    }
 }
 
 
@@ -74,7 +82,6 @@ int main() {
 
     randomInitializeNetwork(network, numNodes);
     randomSubscription(network);
-    network.printNetwork();
 
     int eventProbability, createNodeProbability, unsubscribeProbability;
     std::cout << "Probability event (0 to 100%):";
@@ -87,12 +94,9 @@ int main() {
     while (!network.neighbors.empty()) {
         network.update();
 
-        std::vector<Node*> nodesToProcess;
-        for (const auto& [node, _] : network.neighbors) {
-            nodesToProcess.push_back(node);
-        }
+        Network backup = network;
 
-        for (Node* node : nodesToProcess) {
+        for (auto& [node, _] : backup.neighbors) {
             if (rand() % 100 < eventProbability) {
                 node->createEvent(rand() % 100 + 1);
             }
@@ -103,14 +107,14 @@ int main() {
 
             if (rand() % 100 < unsubscribeProbability) {
                 if (!node->subscriptions.empty()) {
-                    auto it = node->subscriptions.begin();
-                    std::advance(it, rand() % node->subscriptions.size());
-                    Node* toUnsubscribe = it->first;
-                    node->unsubscribe(toUnsubscribe);
+                    const auto randomNode = network.neighbors[node][std::rand() % network.neighbors[node].size()];
+                    node->unsubscribe(randomNode);
                 }
             }
         }
+        network = backup;
     }
+    std::cout << "end";
     return 0;
 }
 
