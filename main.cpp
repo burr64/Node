@@ -94,9 +94,7 @@ int main() {
     while (!network.neighbors.empty()) {
         network.update();
 
-        Network backup = network;
-
-        for (auto& [backupNode, _] : backup.neighbors) {
+        for (auto& [backupNode, _] : network.neighbors) {
             for (auto& [node, _] : network.neighbors) {
                 if (node == backupNode) {
                     if (rand() % 100 < eventProbability) {

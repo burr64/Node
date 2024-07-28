@@ -58,22 +58,3 @@ void Network::printNetwork() const {
     }
 }
 
-Network Network::clone() const {
-    Network copy;
-    std::map<Node*, Node*> nodeMap;
-
-    for (const auto& [node, _] : neighbors) {
-        auto newNode = new Node(node->name, &copy);
-        copy.addNode(newNode);
-        nodeMap[node] = newNode;
-    }
-
-    for (const auto& [node, neighborList] : neighbors) {
-        Node* newNode = nodeMap.at(node);
-        for (Node* neighbor : neighborList) {
-            newNode->subscribe(nodeMap.at(neighbor));
-        }
-    }
-
-    return copy;
-}

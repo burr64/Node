@@ -45,10 +45,3 @@ void Node::createNode(const std::string &newName) {
     subscriptions[newNode] = {0, 0};
     network->neighbors[this].push_back(newNode);
 }
-
-Node* Node::clone(Network* newNetwork) const {
-    // Create a new node with the same name but in the new network
-    const auto newNode = new Node(this->name, newNetwork);
-    // Return the newly created node
-    return newNode;
-}

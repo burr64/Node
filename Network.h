@@ -20,7 +20,7 @@ public:
     void removeNode(Node* node);
     void update();
 
-    Network clone() const;
+    Network *clone() const;
 };
 
 #endif // NETWORK_H
